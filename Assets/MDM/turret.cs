@@ -15,10 +15,16 @@ public class turret : MonoBehaviour
 
     void releaseProjectile()
     {
-        GameObject projectileRef = Instantiate(projectile);
-        projectileRef.transform.position = barrelHolder.transform.position;
-        projectileRef.transform.rotation = barrelHolder.transform.rotation;
-        float repeatRate = Random.Range(2, 15);
+        RaycastHit hit;
+        float repeatRate = Random.Range(2, 5);
+
+        if (Physics.Raycast(barrelHolder.transform.position, barrelHolder.transform.forward, out hit, Mathf.Infinity))
+        {
+            GameObject projectileRef = Instantiate(projectile);
+            projectileRef.transform.position = barrelHolder.transform.position;
+            projectileRef.transform.rotation = barrelHolder.transform.rotation;
+        }
+
         Invoke("releaseProjectile", repeatRate);
     }
 
