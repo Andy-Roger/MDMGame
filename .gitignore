@@ -5,7 +5,9 @@
 /[Bb]uilds/
 /Assets/AssetStoreTools*
 /ProjectSettings
-/Assets/Dependencies*
+/Assets/Dependencies
+/Assets/Dependencies.meta
+
 
 
 # Visual Studio 2015 cache directory
