@@ -66,15 +66,6 @@ namespace Valve.VR.InteractionSystem
 			inFlight = true;
             released = true;
 
-            if (stateManager.isSuperArrow)
-            {
-                arrowHeadRB.useGravity = false;
-            }
-            else
-            {
-                arrowHeadRB.useGravity = true;
-            }
-
             airReleaseSound.Play();
 
 			if ( glintParticle != null )

@@ -40,20 +40,35 @@ namespace Valve.VR.InteractionSystem
 		public int maxArrowCount = 10;
 		private List<GameObject> arrowList;
 
+        private bool _isSuperArrowMode = stateManager.superArrowMode;
+        //-------------------------------------------------
+        void Awake()
+        {
+            allowTeleport = GetComponent<AllowTeleportWhileAttachedToHand>();
+            allowTeleport.teleportAllowed = true;
+            allowTeleport.overrideHoverLock = false;
 
-		//-------------------------------------------------
-		void Awake()
-		{
-			allowTeleport = GetComponent<AllowTeleportWhileAttachedToHand>();
-			allowTeleport.teleportAllowed = true;
-			allowTeleport.overrideHoverLock = false;
+            arrowList = new List<GameObject>();
+        }
 
-			arrowList = new List<GameObject>();
-		}
+        private void OnEnable()
+        {
+            stateManager.superArrowModeEvent += updateSuperArrowMode;
+        }
+
+        private void OnDisable()
+        {
+            stateManager.superArrowModeEvent -= updateSuperArrowMode;
+        }
+
+        void updateSuperArrowMode(bool value)
+        {
+            _isSuperArrowMode = value;
+        }
 
 
-		//-------------------------------------------------
-		private void OnAttachedToHand( Hand attachedHand )
+        //-------------------------------------------------
+        private void OnAttachedToHand( Hand attachedHand )
 		{
 			hand = attachedHand;
 			FindBow();
@@ -66,9 +81,12 @@ namespace Valve.VR.InteractionSystem
 			GameObject arrow = Instantiate( arrowPrefab, arrowNockTransform.position, arrowNockTransform.rotation ) as GameObject;
 			arrow.name = "Bow Arrow";
 			arrow.transform.parent = arrowNockTransform;
-			Util.ResetTransform( arrow.transform );
+            Util.ResetTransform(arrow.transform);
 
-			arrowList.Add( arrow );
+            GameObject superArrowRef = Instantiate(Resources.Load("superArrow", typeof(GameObject)), arrow.transform, false) as GameObject;
+            superArrowRef.transform.parent = arrow.transform;
+
+            arrowList.Add( arrow );
 
 			while ( arrowList.Count > maxArrowCount )
 			{
@@ -224,12 +242,31 @@ namespace Valve.VR.InteractionSystem
 			currentArrow.transform.parent = null;
 
 			Arrow arrow = currentArrow.GetComponent<Arrow>();
-			arrow.shaftRB.isKinematic = false;
-			arrow.shaftRB.useGravity = true;
-			arrow.shaftRB.transform.GetComponent<BoxCollider>().enabled = true;
 
-			arrow.arrowHeadRB.isKinematic = false;
-			arrow.arrowHeadRB.useGravity = true;
+            arrow.shaftRB.isKinematic = false;
+
+            if(_isSuperArrowMode)
+            {
+                arrow.shaftRB.useGravity = false;
+            }
+            else
+            {
+                arrow.shaftRB.useGravity = true;
+            }
+
+            arrow.shaftRB.transform.GetComponent<BoxCollider>().enabled = true;
+
+
+            if (_isSuperArrowMode)
+            {
+                arrow.arrowHeadRB.useGravity = false;
+            }
+            else
+            {
+                arrow.arrowHeadRB.useGravity = true;
+            }
+
+            arrow.arrowHeadRB.isKinematic = false;
 			arrow.arrowHeadRB.transform.GetComponent<BoxCollider>().enabled = true;
 
 			arrow.arrowHeadRB.AddForce( currentArrow.transform.forward * bow.GetArrowVelocity(), ForceMode.VelocityChange );

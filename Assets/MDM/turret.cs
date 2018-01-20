@@ -23,6 +23,7 @@ public class turret : MonoBehaviour
             GameObject projectileRef = Instantiate(projectile);
             projectileRef.transform.position = barrelHolder.transform.position;
             projectileRef.transform.rotation = barrelHolder.transform.rotation;
+            Physics.IgnoreCollision(projectileRef.GetComponent<Collider>(), GetComponent<Collider>());
         }
 
         Invoke("releaseProjectile", repeatRate);
@@ -32,5 +33,11 @@ public class turret : MonoBehaviour
     {
         var targetRotation = Quaternion.LookRotation(init.vrCamera.transform.position - barrelHolder.transform.position);
         barrelHolder.transform.rotation = Quaternion.Slerp(barrelHolder.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Destroy(gameObject);
+        GameObject turretExplosion = Instantiate(Resources.Load("turretExplosion", typeof(GameObject)), transform.position, Quaternion.identity ) as GameObject;
     }
 }
