@@ -11,6 +11,6 @@ public class mazeMap : MonoBehaviour
 
     private void Update()
     {
-        //transform.Rotate(0,1,0);
+        transform.Rotate(0, 0, 10 * Time.deltaTime);
     }
 }

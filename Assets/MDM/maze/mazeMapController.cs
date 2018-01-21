@@ -25,16 +25,12 @@ public class mazeMapController : MonoBehaviour
 
     void menuButton1Clicked(object sender, ClickedEventArgs e)
     {
-        mazeMap.transform.parent = inputManager.trackedController1.transform;
-        mazeMap.transform.localPosition = Vector3.up;
-        mazeMap.SetActive(true);
+        placeMap(inputManager.trackedController1);
     }
 
     void menuButton2Clicked(object sender, ClickedEventArgs e)
     {
-        mazeMap.transform.parent = inputManager.trackedController2.transform;
-        mazeMap.transform.localPosition = Vector3.up;
-        mazeMap.SetActive(true);
+        placeMap(inputManager.trackedController2);
     }
 
     void menuButton1Unclicked(object sender, ClickedEventArgs e)
@@ -47,5 +43,13 @@ public class mazeMapController : MonoBehaviour
     {
         mazeMap.transform.parent = null;
         mazeMap.SetActive(false);
+    }
+
+    void placeMap(SteamVR_TrackedController trackedController)
+    {
+        mazeMap.transform.parent = trackedController.transform;
+        mazeMap.transform.localPosition = new Vector3(0, 0.05f, 0.12f);
+        mazeMap.transform.localEulerAngles = new Vector3(-56, 0, 0);
+        mazeMap.SetActive(true);
     }
 }
