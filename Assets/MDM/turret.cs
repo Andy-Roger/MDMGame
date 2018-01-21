@@ -6,6 +6,7 @@ public class turret : MonoBehaviour
 {
     public GameObject projectile;
     public GameObject barrelHolder;
+    public GameObject motionSenser;
     public float rotationSpeed = 4;
 
     void Start()
@@ -20,10 +21,13 @@ public class turret : MonoBehaviour
 
         if (Physics.Raycast(barrelHolder.transform.position, barrelHolder.transform.forward, out hit, Mathf.Infinity))
         {
-            GameObject projectileRef = Instantiate(projectile);
-            projectileRef.transform.position = barrelHolder.transform.position;
-            projectileRef.transform.rotation = barrelHolder.transform.rotation;
-            Physics.IgnoreCollision(projectileRef.GetComponent<Collider>(), GetComponent<Collider>());
+            if(hit.collider.gameObject == init.headCollider)
+            {
+                GameObject projectileRef = Instantiate(projectile);
+                projectileRef.transform.position = barrelHolder.transform.position;
+                projectileRef.transform.rotation = barrelHolder.transform.rotation;
+                Physics.IgnoreCollision(projectileRef.GetComponent<Collider>(), GetComponent<Collider>());
+            }
         }
 
         Invoke("releaseProjectile", repeatRate);
@@ -31,8 +35,17 @@ public class turret : MonoBehaviour
 
     void Update()
     {
-        var targetRotation = Quaternion.LookRotation(init.vrCamera.transform.position - barrelHolder.transform.position);
-        barrelHolder.transform.rotation = Quaternion.Slerp(barrelHolder.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        motionSenser.transform.LookAt(init.headCollider.transform);
+
+        RaycastHit hit;
+        if (Physics.Raycast(motionSenser.transform.position, motionSenser.transform.forward, out hit, Mathf.Infinity))
+        {
+            if (hit.collider.gameObject == init.headCollider)
+            {
+                var targetRotation = Quaternion.LookRotation(init.vrCamera.transform.position - barrelHolder.transform.position);
+                barrelHolder.transform.rotation = Quaternion.Slerp(barrelHolder.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
