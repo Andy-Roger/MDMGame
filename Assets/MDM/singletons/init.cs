@@ -8,6 +8,8 @@ public class init : MonoBehaviour
     public static GameObject powerCore;
     public static GameObject vrCamera;
     public static GameObject headCollider;
+    public static GameObject player;
+    public static GameObject playerFollow;
 
     private void Awake()
     {
@@ -15,5 +17,7 @@ public class init : MonoBehaviour
         powerCore = GameObject.Find("powerCore");
         vrCamera = GameObject.Find("VRCamera");
         headCollider = GameObject.Find("HeadCollider");
+        player = GameObject.Find("Player");
+        playerFollow = GameObject.Find("playerFollow (for map)");
     }
 }
