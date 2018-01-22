@@ -47,9 +47,9 @@ public class mazeMapController : MonoBehaviour
 
     void placeMap(SteamVR_TrackedController trackedController)
     {
-        mazeMap.transform.parent = trackedController.transform;
-        mazeMap.transform.localPosition = new Vector3(0, 0.05f, 0.12f);
-        mazeMap.transform.localEulerAngles = new Vector3(-56, 0, 0);
+        Vector3 controllerWorldPos = trackedController.transform.position;
+        mazeMap.transform.position = new Vector3(controllerWorldPos.x, controllerWorldPos.y + .1f, controllerWorldPos.z);
+        mazeMap.transform.localEulerAngles = new Vector3(-90, 0, 0);
         mazeMap.SetActive(true);
     }
 }

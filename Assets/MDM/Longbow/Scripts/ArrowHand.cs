@@ -269,8 +269,17 @@ namespace Valve.VR.InteractionSystem
             arrow.arrowHeadRB.isKinematic = false;
 			arrow.arrowHeadRB.transform.GetComponent<BoxCollider>().enabled = true;
 
-			arrow.arrowHeadRB.AddForce( currentArrow.transform.forward * bow.GetArrowVelocity(), ForceMode.VelocityChange );
-			arrow.arrowHeadRB.AddTorque( currentArrow.transform.forward * 10 );
+            if (_isSuperArrowMode)
+            {
+                //--this makes the superArrow fly extremely fast
+                arrow.arrowHeadRB.AddForce(currentArrow.transform.forward * bow.GetArrowVelocity() * 10, ForceMode.VelocityChange);
+                arrow.arrowHeadRB.AddTorque(currentArrow.transform.forward * 10 * 10);
+            }
+            else
+            {
+                arrow.arrowHeadRB.AddForce(currentArrow.transform.forward * bow.GetArrowVelocity(), ForceMode.VelocityChange);
+                arrow.arrowHeadRB.AddTorque(currentArrow.transform.forward * 10 );
+            }
 
 			nocked = false;
 
