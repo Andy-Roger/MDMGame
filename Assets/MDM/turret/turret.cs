@@ -21,7 +21,7 @@ public class turret : MonoBehaviour
 
         if (Physics.Raycast(barrelHolder.transform.position, barrelHolder.transform.forward, out hit, Mathf.Infinity))
         {
-            if(hit.collider.gameObject == init.headCollider)
+            if (hit.collider.gameObject == init.headCollider)
             {
                 GameObject projectileRef = Instantiate(projectile);
                 projectileRef.transform.position = barrelHolder.transform.position;
@@ -48,9 +48,13 @@ public class turret : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
-        Destroy(gameObject);
-        GameObject turretExplosion = Instantiate(Resources.Load("turretExplosion", typeof(GameObject)), transform.position, Quaternion.identity ) as GameObject;
+        if(other.gameObject.tag == "projectile")
+        {
+            Destroy(gameObject);
+            Destroy(other.gameObject);
+            GameObject turretExplosion = Instantiate(Resources.Load("turretExplosion", typeof(GameObject)), transform.position, Quaternion.identity) as GameObject;
+        }
     }
 }
